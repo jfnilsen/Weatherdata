@@ -2,12 +2,49 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center">
+    android:gravity="center"
+    android:weightSum="1">
 
-    <Button
+    <SeekBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/seekBar"
+        android:layout_gravity="center_horizontal"
+        android:progress="60"
+        android:onClick="fixSeekBar"
+        />
+    <TextView
+        android:text="60"
+        android:id="@+id/seekBar_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Switch
+        android:id="@+id/download_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Download"
         android:layout_gravity="center"
         android:onClick="download"/>
+
+
+    <ProgressBar
+        style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        android:layout_gravity="center_horizontal"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="CheckLocal"
+        android:layout_gravity="center"
+        android:onClick="localDBFetch"/>
+
+    <FrameLayout
+        android:id="@+id/retained_fragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+    </FrameLayout>
 </LinearLayout>

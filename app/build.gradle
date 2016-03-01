@@ -25,4 +25,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile files('/home/jim/StudioProjects/WeatherData/libs/gson-2.5.jar')
     compile files('/home/jim/StudioProjects/Weatherdata/libs/gson-2.5.jar')
+    compile files('C:/Users/Jim/AndroidStudioProjects/Weatherdata/libs/gson-2.5.jar')
 }
