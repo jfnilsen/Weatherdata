@@ -1,50 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
+    android:gravity="top"
     android:weightSum="1">
 
-    <SeekBar
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/seekBar"
-        android:layout_gravity="center_horizontal"
-        android:progress="60"
-        android:onClick="fixSeekBar"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         />
-    <TextView
-        android:text="60"
-        android:id="@+id/seekBar_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <Switch
-        android:id="@+id/download_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Download"
-        android:layout_gravity="center"
-        android:onClick="download"/>
-
-
-    <ProgressBar
-        style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Horizontal"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/progressBar"
-        android:layout_gravity="center_horizontal"/>
+        android:layout_height="match_parent"
+        android:gravity="top"
+        android:weightSum="1">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="CheckLocal"
-        android:layout_gravity="center"
-        android:onClick="localDBFetch"/>
+        <Switch
+            android:id="@+id/download_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/download"
+            android:layout_gravity="center"/>
 
-    <FrameLayout
-        android:id="@+id/retained_fragment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-    </FrameLayout>
+
+        <ProgressBar
+            style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressBar"
+            android:layout_gravity="center_horizontal"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CheckLocal"
+            android:layout_gravity="center"
+            android:onClick="localDBFetch"/>
+        <com.example.jim.weatherdata.GraphView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <fragment android:name="com.example.jim.weatherdata.RetainedFragment"
+            android:id="@+id/retained_fragment"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            tools:layout="@layout/retained_fragment" />
+    </LinearLayout>
+
 </LinearLayout>

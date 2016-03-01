@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Weather data</string>
+    <string name="interval">Download interval</string>
+    <string name="max_seconds">Max running time</string>
+    <string name="download">Download</string>
+    <string name="pref_interval">Interval Preference</string>
+    <string name="pref_int_summ">The interval which the program will wait before downloading another data</string>
+    <string name="max_seconds_summ">The amount of seconds the download will maximum run for</string>
 </resources>

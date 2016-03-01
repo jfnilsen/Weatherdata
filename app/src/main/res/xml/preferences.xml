@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <ListPreference
+        android:key="PREF_INTERVAL"
+        android:title="@string/pref_interval"
+        android:summary="@string/pref_int_summ"
+        android:entries="@array/interval_strings"
+        android:entryValues="@array/intervals"
+        android:defaultValue="1"/>
+
+    <ListPreference
+        android:key="PREF_SECONDS"
+        android:title="@string/max_seconds"
+        android:summary="@string/max_seconds_summ"
+        android:entries="@array/seconds_strings"
+        android:entryValues="@array/seconds_strings"
+        android:defaultValue="120"/>
+
+
+</PreferenceScreen>

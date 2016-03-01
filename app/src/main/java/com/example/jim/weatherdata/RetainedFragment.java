@@ -2,9 +2,12 @@ package com.example.jim.weatherdata;
 
 import android.app.Fragment;
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 
 import com.google.gson.Gson;
@@ -14,20 +17,24 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 /**
  * Created by jim on 29.02.16.
  */
 public class RetainedFragment extends Fragment {
 
-    ArrayList<WeatherData> dataList = new ArrayList<>();
-    boolean running = true;
+    boolean running = false;
     DownloadTimeHelper mCallback;
     public interface DownloadTimeHelper {
         void onDownloadTimeDecrease(int remainingTime);
         void downloadStarted();
         void downloadCompleted();
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.retained_fragment, container);
     }
 
     @Override
@@ -47,25 +54,39 @@ public class RetainedFragment extends Fragment {
         }
     }
 
-    public void getWeatherFromJson(final int times) {
+    public void getWeatherFromJson(final int maxRunningTime, final int interval) {
+        Thread countdownThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                int secondsRemaining = maxRunningTime;
+                mCallback.downloadStarted();
+                while (secondsRemaining > 0 && running){
+                    try {
+                        Thread.sleep(1000);
+                        mCallback.onDownloadTimeDecrease(maxRunningTime - secondsRemaining--);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                running = false;
+                mCallback.downloadCompleted();
+            }
+        });
+
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 {
-                    running = true;
-                    int runsRemaining = times;
-
                     while (running){
-                        if(runsRemaining <= 0 || !running){
-                            running = false;
-                            break;
-                        }
-                        dataList = new ArrayList<>();
                         String jsonURL = "http://kark.hin.no/~wfa/fag/android/2016/weather/vdata.php?id=2";
                         HttpURLConnection connection;
                         URL url;
-                        WeatherDataSource src = null;
+                        WeatherDataSource src;
                         try {
+                            Thread.sleep(1000*interval);
+                            if(!running) break;
+
                             url = new URL(jsonURL);
                                 connection = (HttpURLConnection) url.openConnection();
                                 connection.setRequestProperty("Content-Type", "text/plain; charset-utf-8");
@@ -73,20 +94,15 @@ public class RetainedFragment extends Fragment {
 
                                 if (responseCode == HttpURLConnection.HTTP_OK) {
                                     Gson gson = new Gson();
-                                    mCallback.downloadStarted();
-
                                     WeatherData data = gson.fromJson(new InputStreamReader(connection.getInputStream()), WeatherData.class);
                                     src = new WeatherDataSource(getActivity());
                                     src.open();
                                     src.createWeatherData(data.id, data.station_name, data.station_position, data.timestamp, data.temperature, data.pressure, data.humidity);
                                     src.close();
-                                    mCallback.onDownloadTimeDecrease(times - --runsRemaining);
-                                    Thread.sleep(1000);
+
                                 } else {
                                     Log.d("MyTag", "HTTP error code: " + responseCode);
                                 }
-
-
                         } catch (IOException e) {
                             Log.d("MyTag", e.getMessage());
                         } catch (SQLException e) {
@@ -95,15 +111,19 @@ public class RetainedFragment extends Fragment {
                             e.printStackTrace();
                         }
                     }
-                    mCallback.downloadCompleted();
                 }
-
             }
         });
+
+        running = true;
+        countdownThread.start();
         thread.start();
     }
     public void stopThread(){
         running = false;
+    }
+    public boolean isRunning() {
+        return running;
     }
 
 
