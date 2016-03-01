@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity implements RetainedFragment.
     }
 
 
-
     public void fixSeekBar() {
         SeekBar seekBar = (SeekBar)findViewById(R.id.seekBar);
         seekBar.setProgress((int)total);
@@ -73,12 +72,37 @@ public class MainActivity extends AppCompatActivity implements RetainedFragment.
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Button downloadButton = (Button) findViewById(R.id.download_button);
+                Switch downloadButton = (Switch) findViewById(R.id.download_button);
                 downloadButton.setText(total-remainingTime + "");
                 ProgressBar bar = (ProgressBar)findViewById(R.id.progressBar);
                 double progress = (remainingTime/total)*100;
                 bar.setProgress((int)progress);
 
+            }
+        });
+    }
+
+    @Override
+    public void downloadStarted() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                SeekBar bar = (SeekBar) findViewById(R.id.seekBar);
+                bar.setEnabled(false);
+            }
+        });
+    }
+
+    @Override
+    public void downloadCompleted() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                SeekBar bar = (SeekBar) findViewById(R.id.seekBar);
+                bar.setEnabled(true);
+                Switch downloadButton = (Switch) findViewById(R.id.download_button);
+                downloadButton.setText("Complete!");
+                downloadButton.setChecked(false);
             }
         });
     }

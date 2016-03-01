@@ -65,7 +65,8 @@ public class WeatherDataSource {
         cursor.moveToLast();
 
         for (int i = 0; i < rowsFromTheBottom; i++){
-            cursor.moveToPrevious();
+            if(!cursor.isFirst())
+                cursor.moveToPrevious();
         }
 
         while (!cursor.isLast()) {

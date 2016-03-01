@@ -26,6 +26,8 @@ public class RetainedFragment extends Fragment {
     DownloadTimeHelper mCallback;
     public interface DownloadTimeHelper {
         void onDownloadTimeDecrease(int remainingTime);
+        void downloadStarted();
+        void downloadCompleted();
     }
 
     @Override
@@ -52,6 +54,7 @@ public class RetainedFragment extends Fragment {
                 {
                     running = true;
                     int runsRemaining = times;
+
                     while (running){
                         if(runsRemaining <= 0 || !running){
                             running = false;
@@ -70,6 +73,7 @@ public class RetainedFragment extends Fragment {
 
                                 if (responseCode == HttpURLConnection.HTTP_OK) {
                                     Gson gson = new Gson();
+                                    mCallback.downloadStarted();
 
                                     WeatherData data = gson.fromJson(new InputStreamReader(connection.getInputStream()), WeatherData.class);
                                     src = new WeatherDataSource(getActivity());
@@ -91,6 +95,7 @@ public class RetainedFragment extends Fragment {
                             e.printStackTrace();
                         }
                     }
+                    mCallback.downloadCompleted();
                 }
 
             }
