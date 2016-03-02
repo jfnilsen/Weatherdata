@@ -1,8 +1,11 @@
 package com.example.jim.weatherdata;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +17,8 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.CookieHandler;
+import java.net.CookieManager;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.SQLException;
@@ -21,10 +26,20 @@ import java.sql.SQLException;
 /**
  * Created by jim on 29.02.16.
  */
-public class RetainedFragment extends Fragment {
+public class RetainedFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     boolean running = false;
+    String stationValue = "0";
     DownloadTimeHelper mCallback;
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        Context context = getActivity();
+        SharedPreferences preferences =
+                PreferenceManager.getDefaultSharedPreferences(context);
+        stationValue = preferences.getString("PREF_STATION", "0");
+    }
+
     public interface DownloadTimeHelper {
         void onDownloadTimeDecrease(int remainingTime);
         void downloadStarted();
@@ -41,10 +56,17 @@ public class RetainedFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        SharedPreferences preferences =
+                PreferenceManager.getDefaultSharedPreferences(getActivity());
+        preferences.registerOnSharedPreferenceChangeListener(this);
+        stationValue = preferences.getString("PREF_STATION", "0");
+        //Aktiver cookies:
+        CookieManager cookieManager = new CookieManager();
+        CookieHandler.setDefault(cookieManager);
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(Activity context) {
         super.onAttach(context);
 
         try{
@@ -58,10 +80,10 @@ public class RetainedFragment extends Fragment {
         Thread countdownThread = new Thread(new Runnable() {
             @Override
             public void run() {
-
                 int secondsRemaining = maxRunningTime;
                 mCallback.downloadStarted();
-                while (secondsRemaining > 0 && running){
+
+                while (secondsRemaining >= 0 && running){
                     try {
                         Thread.sleep(1000);
                         mCallback.onDownloadTimeDecrease(maxRunningTime - secondsRemaining--);
@@ -78,11 +100,11 @@ public class RetainedFragment extends Fragment {
             @Override
             public void run() {
                 {
+                    String jsonURL = "http://kark.hin.no/~wfa/fag/android/2016/weather/vdata.php?id=" + stationValue;
+                    HttpURLConnection connection;
+                    URL url;
+                    WeatherDataSource src;
                     while (running){
-                        String jsonURL = "http://kark.hin.no/~wfa/fag/android/2016/weather/vdata.php?id=2";
-                        HttpURLConnection connection;
-                        URL url;
-                        WeatherDataSource src;
                         try {
                             Thread.sleep(1000*interval);
                             if(!running) break;
@@ -124,17 +146,6 @@ public class RetainedFragment extends Fragment {
     }
     public boolean isRunning() {
         return running;
-    }
-
-
-    class WeatherData {
-        int id;
-        String station_name;
-        String station_position;
-        String timestamp;
-        double temperature;
-        double pressure;
-        double humidity;
     }
 
 }

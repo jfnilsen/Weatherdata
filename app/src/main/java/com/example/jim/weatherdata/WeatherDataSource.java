@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  * Created by Jim on 29/02/2016.
@@ -43,9 +44,18 @@ public class WeatherDataSource {
 
     }
 
-    public void getDataFromDb(int rowsFromTheBottom) {
-        SQLiteDatabase db = dbhelper.getReadableDatabase();
+    public void deleteAllStoredData(){
+        database.delete(MySQLiteHelper.WEATHER_TABLE, null, null);
+    }
 
+    public ArrayList<WeatherData> getDataFromDb(int rowsFromTheBottom) {
+        try {
+            open();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        SQLiteDatabase db = dbhelper.getReadableDatabase();
+        ArrayList<WeatherData> weatherDatas = new ArrayList<>();
 
         String[] projection = {
                 MySQLiteHelper.KEY_PRIMARY_ID,
@@ -59,21 +69,31 @@ public class WeatherDataSource {
         String sortOrder =
                 MySQLiteHelper.KEY_PRIMARY_ID + " ASC";
 
+
         Cursor cursor = db.query(
                 MySQLiteHelper.WEATHER_TABLE, projection, null, null, null, null, sortOrder
         );
         cursor.moveToLast();
 
-        for (int i = 0; i < rowsFromTheBottom; i++){
-            if(!cursor.isFirst())
+        for (int i = 0; i <= rowsFromTheBottom; i++){
+            if(!cursor.isFirst() && !cursor.isBeforeFirst())
                 cursor.moveToPrevious();
         }
 
-        while (!cursor.isLast()) {
-            double temperature = cursor.getDouble(
-                    cursor.getColumnIndexOrThrow(MySQLiteHelper.KEY_TEMPERATURE));
-            System.out.println(temperature);
+        while (!cursor.isLast() && !cursor.isBeforeFirst()) {
+            int id = cursor.getInt(cursor.getColumnIndexOrThrow(MySQLiteHelper.KEY_ID));
+            String station_name = cursor.getString(cursor.getColumnIndexOrThrow(MySQLiteHelper.KEY_STATION_NAME));
+            String station_position = cursor.getString(cursor.getColumnIndexOrThrow(MySQLiteHelper.KEY_STATION_POSITION));
+            String timestamp = cursor.getString(cursor.getColumnIndexOrThrow(MySQLiteHelper.KEY_TIMESTAMP));
+            double temperature = cursor.getDouble(cursor.getColumnIndexOrThrow(MySQLiteHelper.KEY_TEMPERATURE));
+            double pressure = cursor.getDouble(cursor.getColumnIndexOrThrow(MySQLiteHelper.KEY_PRESSURE));
+            double humidity = cursor.getDouble( cursor.getColumnIndexOrThrow(MySQLiteHelper.KEY_HUMIDITY));
+            weatherDatas.add(new WeatherData(id, station_name,station_position,timestamp,temperature,pressure,humidity));
+
             cursor.moveToNext();
         }
+
+        close();
+        return weatherDatas;
     }
 }

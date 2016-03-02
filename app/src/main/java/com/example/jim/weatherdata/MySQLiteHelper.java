@@ -21,7 +21,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     public static final String KEY_PRESSURE = "pressure";
     public static final String KEY_HUMIDITY = "humidity";
 
-    private static final String DATABASE_CREATE = "create table "
+    private static final String DATABASE_CREATE = "create table if not exists "
             + WEATHER_TABLE + " (" + KEY_PRIMARY_ID +" integer primary key autoincrement, " + KEY_ID
             + " integer, " + KEY_STATION_NAME + " text,  " + KEY_STATION_POSITION + " text, "
             + KEY_TIMESTAMP + " text, " + KEY_TEMPERATURE + " integer, " + KEY_PRESSURE + " integer, "
@@ -42,4 +42,5 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + WEATHER_TABLE);
         onCreate(db);
     }
+
 }

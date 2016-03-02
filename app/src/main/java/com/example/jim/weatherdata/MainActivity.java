@@ -3,6 +3,8 @@ package com.example.jim.weatherdata;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Canvas;
+import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,14 +12,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import java.net.CookieHandler;
 import java.net.CookieManager;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements RetainedFragment.DownloadTimeHelper, SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -28,14 +33,11 @@ public class MainActivity extends AppCompatActivity implements RetainedFragment.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_fragment);
-        //Aktiver cookies:
-        CookieManager cookieManager = new CookieManager();
-        CookieHandler.setDefault(cookieManager);
         setSupportActionBar((Toolbar) findViewById(R.id.my_toolbar));
         SharedPreferences preferences =
                 PreferenceManager.getDefaultSharedPreferences(this);
-
         preferences.registerOnSharedPreferenceChangeListener(this);
+
         intervalSec = Integer.parseInt(preferences.getString("PREF_INTERVAL", "1"));
         totalSeconds = Double.parseDouble(preferences.getString("PREF_SECONDS", "120"));
 
@@ -83,10 +85,13 @@ public class MainActivity extends AppCompatActivity implements RetainedFragment.
         }
 
     }
-    public void localDBFetch(View view) {
+    public void localDBFetch() {
 
         WeatherDataSource source = new WeatherDataSource(this);
-        source.getDataFromDb(10);
+        ArrayList<WeatherData> weatherDatas = source.getDataFromDb((int)totalSeconds);
+        GraphView graphView = ((GraphView) findViewById(R.id.graphView));
+        graphView.setWeatherDatas(weatherDatas);
+        graphView.invalidate();
     }
 
     @Override
@@ -95,10 +100,11 @@ public class MainActivity extends AppCompatActivity implements RetainedFragment.
             @Override
             public void run() {
                 Switch downloadButton = (Switch) findViewById(R.id.download_switch);
-                downloadButton.setText(String.valueOf((int)(totalSeconds -remainingTime)));
-                ProgressBar bar = (ProgressBar)findViewById(R.id.progressBar);
-                double progress = (remainingTime/ totalSeconds)*100;
-                bar.setProgress((int)progress);
+                downloadButton.setText(String.valueOf((int) (totalSeconds - remainingTime)));
+                ProgressBar bar = (ProgressBar) findViewById(R.id.progressBar);
+                double progress = (remainingTime / totalSeconds) * 100;
+                bar.setProgress((int) progress);
+                localDBFetch();
 
             }
         });

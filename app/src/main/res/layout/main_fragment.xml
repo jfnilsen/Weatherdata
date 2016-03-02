@@ -29,7 +29,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/download"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:layout_weight="1"/>
 
 
         <ProgressBar
@@ -37,17 +38,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/progressBar"
-            android:layout_gravity="center_horizontal"/>
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"/>
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="CheckLocal"
-            android:layout_gravity="center"
-            android:onClick="localDBFetch"/>
+        <!--<Button-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="CheckLocal"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:onClick="localDBFetch"/>-->
         <com.example.jim.weatherdata.GraphView
+            android:id="@+id/graphView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/colorPrimaryDark"/>
 
         <fragment android:name="com.example.jim.weatherdata.RetainedFragment"
             android:id="@+id/retained_fragment"

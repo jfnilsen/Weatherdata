@@ -1,6 +1,7 @@
 package com.example.jim.weatherdata;
 
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceActivity;
 
 import java.util.List;
@@ -8,11 +9,11 @@ import java.util.List;
 /**
  * Created by Jim on 01/03/2016.
  */
+@SuppressWarnings("deprecation")
 public class MyPreferenceActivity extends PreferenceActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //addPreferencesFromResource(R.xml.preferences);
     }
 
     @Override

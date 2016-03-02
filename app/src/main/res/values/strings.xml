@@ -4,6 +4,11 @@
     <string name="max_seconds">Max running time</string>
     <string name="download">Download</string>
     <string name="pref_interval">Interval Preference</string>
-    <string name="pref_int_summ">The interval which the program will wait before downloading another data</string>
-    <string name="max_seconds_summ">The amount of seconds the download will maximum run for</string>
+    <string name="pref_int_summ">The interval which the program will wait before downloading another data.</string>
+    <string name="max_seconds_summ">The amount of seconds the download will maximum run for.</string>
+    <string name="station_name">Station name</string>
+    <string name="station_summ">Choose which station to gather weatherdata from.</string>
+    <string name="deleteButton">deleteButton</string>
+    <string name="delete_database">Delete database</string>
+    <string name="delete_database_summ">Clicking this will clear all saved database data.</string>
 </resources>
