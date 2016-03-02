@@ -1,9 +1,12 @@
-package com.example.jim.weatherdata;
+package com.example.jim.weatherdata.preferences;
 
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.widget.Toast;
+
+import com.example.jim.weatherdata.R;
+import com.example.jim.weatherdata.sqlite.WeatherDataSource;
 
 import java.sql.SQLException;
 

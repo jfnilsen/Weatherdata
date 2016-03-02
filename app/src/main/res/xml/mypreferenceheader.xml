@@ -1,6 +1,6 @@
 <preference-headers xmlns:android="http://schemas.android.com/apk/res/android" >
     <header
-        android:fragment="com.example.jim.weatherdata.MyPreferenceFragment" android:icon="@android:drawable/star_big_on"
+        android:fragment="com.example.jim.weatherdata.preferences.MyPreferenceFragment" android:icon="@android:drawable/star_big_on"
         android:summary="En Beskrivelse Av Mine Preferanser"
         android:title="Mine Preferanser" />
 </preference-headers>

@@ -1,8 +1,10 @@
-package com.example.jim.weatherdata;
+package com.example.jim.weatherdata.preferences;
 
 import android.os.Bundle;
-import android.preference.Preference;
 import android.preference.PreferenceActivity;
+
+import com.example.jim.weatherdata.R;
+import com.example.jim.weatherdata.preferences.MyPreferenceFragment;
 
 import java.util.List;
 

@@ -11,4 +11,5 @@
     <string name="deleteButton">deleteButton</string>
     <string name="delete_database">Delete database</string>
     <string name="delete_database_summ">Clicking this will clear all saved database data.</string>
+    <string name="action_settings">Settings</string>
 </resources>

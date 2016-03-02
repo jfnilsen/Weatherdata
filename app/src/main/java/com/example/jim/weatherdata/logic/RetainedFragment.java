@@ -1,4 +1,4 @@
-package com.example.jim.weatherdata;
+package com.example.jim.weatherdata.logic;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -13,6 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
+import com.example.jim.weatherdata.R;
+import com.example.jim.weatherdata.sqlite.WeatherData;
+import com.example.jim.weatherdata.sqlite.WeatherDataSource;
 import com.google.gson.Gson;
 
 import java.io.IOException;

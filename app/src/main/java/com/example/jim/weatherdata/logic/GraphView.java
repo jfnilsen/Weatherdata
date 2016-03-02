@@ -1,4 +1,4 @@
-package com.example.jim.weatherdata;
+package com.example.jim.weatherdata.logic;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -6,6 +6,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
+
+import com.example.jim.weatherdata.sqlite.WeatherData;
 
 import java.util.ArrayList;
 

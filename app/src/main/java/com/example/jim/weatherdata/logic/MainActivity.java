@@ -1,10 +1,10 @@
-package com.example.jim.weatherdata;
+package com.example.jim.weatherdata.logic;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Canvas;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,16 +12,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ProgressBar;
-import android.widget.SeekBar;
-import android.widget.Spinner;
 import android.widget.Switch;
-import android.widget.Toast;
 
-import java.net.CookieHandler;
-import java.net.CookieManager;
+import com.example.jim.weatherdata.R;
+import com.example.jim.weatherdata.preferences.MyPreferenceActivity;
+import com.example.jim.weatherdata.sqlite.WeatherData;
+import com.example.jim.weatherdata.sqlite.WeatherDataSource;
+
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements RetainedFragment.DownloadTimeHelper, SharedPreferences.OnSharedPreferenceChangeListener {
@@ -155,5 +154,27 @@ public class MainActivity extends AppCompatActivity implements RetainedFragment.
     protected void onStop() {
         super.onStop();
         writeToSharedPreference();
+    }
+
+    public void showViewGraphArguments(View view) {
+
+        AlertDialog.Builder settingsBuilder = new AlertDialog.Builder(this);
+        settingsBuilder.setTitle(R.string.action_settings);
+
+        settingsBuilder.setItems(getResources().getStringArray(R.array.station_strings), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case 0:
+//                        showSortSettings();
+                        break;
+                    case 1:
+//                        showStatusSettings();
+                        break;
+                }
+                dialog.dismiss();
+            }
+        });
+        settingsBuilder.show();
     }
 }

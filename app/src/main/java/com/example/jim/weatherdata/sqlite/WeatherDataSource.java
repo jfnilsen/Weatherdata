@@ -1,4 +1,4 @@
-package com.example.jim.weatherdata;
+package com.example.jim.weatherdata.sqlite;
 
 import android.content.ContentValues;
 import android.content.Context;

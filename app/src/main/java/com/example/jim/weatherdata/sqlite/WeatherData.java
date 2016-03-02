@@ -1,16 +1,16 @@
-package com.example.jim.weatherdata;
+package com.example.jim.weatherdata.sqlite;
 
 /**
  * Created by jim on 02.03.16.
  */
 public class WeatherData {
-    int id;
-    String station_name;
-    String station_position;
-    String timestamp;
-    double temperature;
-    double pressure;
-    double humidity;
+    public int id;
+    public String station_name;
+    public String station_position;
+    public String timestamp;
+    public double temperature;
+    public double pressure;
+    public double humidity;
 
     public WeatherData(int id, String station_name, String station_position, String timestamp, double temperature, double pressure, double humidity) {
         this.id = id;
