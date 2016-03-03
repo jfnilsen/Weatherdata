@@ -50,8 +50,9 @@ public class GraphView extends View {
         Paint infoPaint = new Paint();
         infoPaint.setColor(Color.WHITE);
         infoPaint.setTextSize(35);
-
-        for(WeatherData data : weatherDatas){
+        ArrayList<WeatherData> dataList = new ArrayList<>();
+        dataList.addAll(weatherDatas);
+        for(WeatherData data : dataList){
 
             double temperature = data.temperature;
             if(minTemp == -99){
@@ -65,7 +66,6 @@ public class GraphView extends View {
             if(maxTemp < temperature){
                 maxTemp = temperature;
             }
-
             canvas.drawCircle(w /( weatherDatas.size()) * index, x_axis - ((float) temperature * h / 10), 5, paint);
             station_cur = data.station_name;
             timestamp_cur = data.timestamp;
