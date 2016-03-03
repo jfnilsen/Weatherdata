@@ -48,7 +48,7 @@ public class WeatherDataSource {
         database.delete(MySQLiteHelper.WEATHER_TABLE, null, null);
     }
 
-    public ArrayList<WeatherData> getDataFromDb(int rowsFromTheBottom) {
+    public ArrayList<WeatherData> getAllDataFromDb() {
         try {
             open();
         } catch (SQLException e) {
@@ -73,12 +73,8 @@ public class WeatherDataSource {
         Cursor cursor = db.query(
                 MySQLiteHelper.WEATHER_TABLE, projection, null, null, null, null, sortOrder
         );
-        cursor.moveToLast();
+        cursor.moveToFirst();
 
-        for (int i = 0; i <= rowsFromTheBottom; i++){
-            if(!cursor.isFirst() && !cursor.isBeforeFirst())
-                cursor.moveToPrevious();
-        }
 
         while (!cursor.isLast() && !cursor.isBeforeFirst()) {
             int id = cursor.getInt(cursor.getColumnIndexOrThrow(MySQLiteHelper.KEY_ID));
@@ -96,7 +92,7 @@ public class WeatherDataSource {
         close();
         return weatherDatas;
     }
-    public ArrayList<WeatherData> getDataFromDbWhereStationId(int station_id, int rowsFromTheBottom) {
+    public ArrayList<WeatherData> getDataFromDbWhereStationId(int station_id) {
         try {
             open();
         } catch (SQLException e) {
@@ -124,12 +120,7 @@ public class WeatherDataSource {
         Cursor cursor = db.query(
                 MySQLiteHelper.WEATHER_TABLE, projection, whereClause, whereArgs,
                 null, null, sortOrder);
-        cursor.moveToLast();
-
-        for (int i = 0; i <= rowsFromTheBottom; i++){
-            if(!cursor.isFirst() && !cursor.isBeforeFirst())
-                cursor.moveToPrevious();
-        }
+        cursor.moveToFirst();
 
         while (!cursor.isLast() && !cursor.isBeforeFirst()) {
             int id = cursor.getInt(cursor.getColumnIndexOrThrow(MySQLiteHelper.KEY_ID));

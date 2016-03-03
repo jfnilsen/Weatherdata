@@ -24,6 +24,20 @@
             android:entryValues="@array/stations"
             android:defaultValue="0"
             />
+        <CheckBoxPreference
+            android:key="PREF_KEEP_OLD"
+            android:title="@string/keep_oldstation"
+            android:summary="@string/keep_oldstation_summ"
+            android:defaultValue="false"
+            />
+        <EditTextPreference
+            android:inputType="number"
+            android:key="PREF_DATA_POINTS"
+            android:title="@string/number_of_datapoints"
+            android:summary="@string/number_of_datapoints_summ"
+            android:hint="@string/datapoints_hint"
+            android:defaultValue="100"
+            />
 
         <Preference android:title="@string/delete_database"
             android:key="DELETE_BUTTON"

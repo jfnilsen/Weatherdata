@@ -44,7 +44,7 @@ public class RetainedFragment extends Fragment implements SharedPreferences.OnSh
     }
 
     public interface DownloadTimeHelper {
-        void onDownloadTimeDecrease(int remainingTime);
+        void onDownloadTimeDecrease(int remainingTime, String stationValue);
         void downloadStarted();
         void downloadCompleted();
     }
@@ -89,7 +89,7 @@ public class RetainedFragment extends Fragment implements SharedPreferences.OnSh
                 while (secondsRemaining >= 0 && running){
                     try {
                         Thread.sleep(1000);
-                        mCallback.onDownloadTimeDecrease(maxRunningTime - secondsRemaining--);
+                        mCallback.onDownloadTimeDecrease(maxRunningTime - secondsRemaining--,stationValue);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

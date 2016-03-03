@@ -10,10 +10,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.jim.weatherdata.R;
 import com.example.jim.weatherdata.preferences.MyPreferenceActivity;
@@ -27,6 +29,10 @@ public class MainActivity extends AppCompatActivity implements RetainedFragment.
     public static final String PREFS_NAME = "MyWeatherPreferences";
     double totalSeconds = 120;
     int intervalSec = 1;
+    int datapoints_number = 100;
+    boolean keep_old_station = false;
+    boolean downloadRunning = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +44,8 @@ public class MainActivity extends AppCompatActivity implements RetainedFragment.
 
         intervalSec = Integer.parseInt(preferences.getString("PREF_INTERVAL", "1"));
         totalSeconds = Double.parseDouble(preferences.getString("PREF_SECONDS", "120"));
+        keep_old_station = preferences.getBoolean("PREF_KEEP_OLD", false);
+        datapoints_number = Integer.parseInt(preferences.getString("PREF_DATA_POINTS", "100"));
 
         setListeners();
     }
@@ -47,8 +55,12 @@ public class MainActivity extends AppCompatActivity implements RetainedFragment.
         switch (item.getItemId()) {
 
             case R.id.action_settings:
-                Intent i = new Intent(this, MyPreferenceActivity.class);
-                startActivity(i);
+                if(downloadRunning){
+                    Toast.makeText(MainActivity.this, getString(R.string.options_disabled), Toast.LENGTH_SHORT).show();
+                }else{
+                    Intent i = new Intent(this, MyPreferenceActivity.class);
+                    startActivity(i);
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -60,7 +72,6 @@ public class MainActivity extends AppCompatActivity implements RetainedFragment.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
-
 
     public void setListeners() {
         Switch downloadSwitch = (Switch)findViewById(R.id.download_switch);
@@ -81,19 +92,26 @@ public class MainActivity extends AppCompatActivity implements RetainedFragment.
         }else{
             ((RetainedFragment) getFragmentManager().findFragmentById(R.id.retained_fragment)).stopThread();
         }
-
     }
-    public void localDBFetch() {
+    public void localDBFetch(String stationValue) {
 
         WeatherDataSource source = new WeatherDataSource(this);
-        ArrayList<WeatherData> weatherDatas = source.getDataFromDb(100);
+        ArrayList<WeatherData> weatherDatas;
+        if(keep_old_station){
+            weatherDatas = source.getAllDataFromDb();
+        }else {
+            weatherDatas = source.getDataFromDbWhereStationId(Integer.parseInt(stationValue));
+        }
+        if(weatherDatas.size() > datapoints_number){
+            weatherDatas = new ArrayList<>(weatherDatas.subList(weatherDatas.size()-datapoints_number-1 ,weatherDatas.size()-1));
+        }
         GraphView graphView = ((GraphView) findViewById(R.id.graphView));
         graphView.setWeatherDatas(weatherDatas);
         graphView.invalidate();
     }
 
     @Override
-    public void onDownloadTimeDecrease(final int remainingTime) {
+    public void onDownloadTimeDecrease(final int remainingTime, final String stationValue) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -102,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements RetainedFragment.
                 ProgressBar bar = (ProgressBar) findViewById(R.id.progressBar);
                 double progress = (remainingTime / totalSeconds) * 100;
                 bar.setProgress((int) progress);
-                localDBFetch();
+                localDBFetch(stationValue);
 
             }
         });
@@ -113,7 +131,9 @@ public class MainActivity extends AppCompatActivity implements RetainedFragment.
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                //TODO:Screen set always on
+                downloadRunning = true;
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
             }
         });
     }
@@ -127,6 +147,8 @@ public class MainActivity extends AppCompatActivity implements RetainedFragment.
                 downloadButton.setText("Complete!");
                 Switch aSwitch = (Switch) findViewById(R.id.download_switch);
                 aSwitch.setChecked(false);
+                downloadRunning = false;
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             }
         });
     }
@@ -139,6 +161,8 @@ public class MainActivity extends AppCompatActivity implements RetainedFragment.
 
         totalSeconds = Double.parseDouble(myprefs.getString("PREF_SECONDS", "120"));
         intervalSec = Integer.parseInt(myprefs.getString("PREF_INTERVAL", "1"));
+        keep_old_station = myprefs.getBoolean("PREF_KEEP_OLD", false);
+        datapoints_number = Integer.parseInt(myprefs.getString("PREF_DATA_POINTS", "100"));
     }
 
     private void writeToSharedPreference(){
@@ -146,6 +170,8 @@ public class MainActivity extends AppCompatActivity implements RetainedFragment.
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString("PREF_INTERVAL", String.valueOf(intervalSec));
         editor.putString("PREF_SECONDS", String.valueOf(totalSeconds));
+        editor.putBoolean("PREF_KEEP_OLD", false);
+        editor.putString("PREF_DATA_POINTS", "100");
         editor.commit();
         super.onStop();
     }
@@ -153,23 +179,17 @@ public class MainActivity extends AppCompatActivity implements RetainedFragment.
     @Override
     protected void onStop() {
         super.onStop();
+        downloadCompleted();
         writeToSharedPreference();
     }
 
     public void showViewGraphArguments(View view) {
+        if(!downloadRunning){
+            Intent i = new Intent(this, VisualizeActivity.class);
+            startActivity(i);
+        }else {
+            Toast.makeText(this, getString(R.string.view_graph_while_downloading),Toast.LENGTH_LONG).show();
+        }
 
-        Intent i = new Intent(this, VisualizeActivity.class);
-        startActivity(i);
-//        AlertDialog.Builder settingsBuilder = new AlertDialog.Builder(this);
-//        settingsBuilder.setTitle(R.string.action_settings);
-//
-//        settingsBuilder.setItems(getResources().getStringArray(R.array.station_strings), new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                display
-//                dialog.dismiss();
-//            }
-//        });
-//        settingsBuilder.show();
     }
 }

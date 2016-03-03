@@ -57,13 +57,12 @@
             android:layout_height="wrap_content"
             android:id="@+id/progressBar"
             android:layout_gravity="center_horizontal"
-            android:layout_weight="1"/>
+            />
 
         <com.example.jim.weatherdata.logic.GraphView
             android:id="@+id/graphView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimaryDark"/>
+            android:layout_height="wrap_content"/>
 
         <fragment android:name="com.example.jim.weatherdata.logic.RetainedFragment"
             android:id="@+id/retained_fragment"

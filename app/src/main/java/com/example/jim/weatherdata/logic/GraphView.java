@@ -39,12 +39,17 @@ public class GraphView extends View {
         Paint paint = new Paint();
         paint.setStrokeWidth(2);
         paint.setColor(Color.parseColor("#92cc72"));
+        paint.setTextSize(50);
+
         canvas.drawLine(0, x_axis, w, x_axis, paint);
         canvas.drawLine(y_axis,0,y_axis,h,paint);
         int index = 0;
         double minTemp = -99;
         double maxTemp = -99;
-        paint.setTextSize(50);
+
+        Paint infoPaint = new Paint();
+        infoPaint.setColor(Color.WHITE);
+        infoPaint.setTextSize(35);
 
         for(WeatherData data : weatherDatas){
 
@@ -53,22 +58,23 @@ public class GraphView extends View {
                 minTemp = temperature;
                 maxTemp = temperature;
             }
-            canvas.drawCircle(w / weatherDatas.size() * index++, x_axis - ((float) temperature * h / 10), 5, paint);
+
             if(minTemp > temperature){
                 minTemp = temperature;
             }
-            if(maxTemp<temperature){
+            if(maxTemp < temperature){
                 maxTemp = temperature;
             }
+
+            canvas.drawCircle(w /( weatherDatas.size()) * index, x_axis - ((float) temperature * h / 10), 5, paint);
             station_cur = data.station_name;
             timestamp_cur = data.timestamp;
             humidity = String.valueOf(data.humidity);
             temperature_cur = String.valueOf(data.temperature);
 
+            index++;
         }
-        Paint infoPaint = new Paint();
-        infoPaint.setColor(Color.WHITE);
-        infoPaint.setTextSize(35);
+
         canvas.drawText("Newest data:", 0, 80, paint);
 
         canvas.drawText("Station: " + String.valueOf(station_cur), 0, 80 + infoPaint.getTextSize(), infoPaint);
@@ -77,6 +83,12 @@ public class GraphView extends View {
         canvas.drawText("Temperature: " +String.valueOf(temperature_cur),0, 80 + infoPaint.getTextSize()*4, infoPaint);
         canvas.drawText(String.valueOf(maxTemp)+"°C",y_axis, x_axis - ((float) maxTemp * h / 10), infoPaint);
         canvas.drawText(String.valueOf(minTemp)+"°C",y_axis, x_axis - ((float) minTemp * h / 10), infoPaint);
+
+        if(weatherDatas.size() != 0){
+            canvas.drawText(weatherDatas.get(0).timestamp, 0,x_axis+50, infoPaint);
+            canvas.drawText(weatherDatas.get(weatherDatas.size()-1).timestamp, w-350, x_axis+50, infoPaint);
+        }
+
     }
 
     public void setWeatherDatas(ArrayList<WeatherData> weatherDatas){
