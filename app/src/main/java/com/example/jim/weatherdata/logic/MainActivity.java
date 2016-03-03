@@ -1,8 +1,6 @@
 package com.example.jim.weatherdata.logic;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -15,6 +13,7 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import com.example.jim.weatherdata.R;
 import com.example.jim.weatherdata.preferences.MyPreferenceActivity;
@@ -78,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements RetainedFragment.
 
             RetainedFragment fragment = (RetainedFragment)getFragmentManager().findFragmentById(R.id.retained_fragment);
             if(!fragment.isRunning())
-                fragment.getWeatherFromJson((int) totalSeconds +1, intervalSec);
+                fragment.getWeatherFromJson((int) totalSeconds, intervalSec);
         }else{
             ((RetainedFragment) getFragmentManager().findFragmentById(R.id.retained_fragment)).stopThread();
         }
@@ -87,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements RetainedFragment.
     public void localDBFetch() {
 
         WeatherDataSource source = new WeatherDataSource(this);
-        ArrayList<WeatherData> weatherDatas = source.getDataFromDb((int)totalSeconds);
+        ArrayList<WeatherData> weatherDatas = source.getDataFromDb(100);
         GraphView graphView = ((GraphView) findViewById(R.id.graphView));
         graphView.setWeatherDatas(weatherDatas);
         graphView.invalidate();
@@ -98,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements RetainedFragment.
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Switch downloadButton = (Switch) findViewById(R.id.download_switch);
+                TextView downloadButton = (TextView) findViewById(R.id.countdown_view);
                 downloadButton.setText(String.valueOf((int) (totalSeconds - remainingTime)));
                 ProgressBar bar = (ProgressBar) findViewById(R.id.progressBar);
                 double progress = (remainingTime / totalSeconds) * 100;
@@ -124,9 +123,10 @@ public class MainActivity extends AppCompatActivity implements RetainedFragment.
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Switch downloadButton = (Switch) findViewById(R.id.download_switch);
+                TextView downloadButton = (TextView) findViewById(R.id.countdown_view);
                 downloadButton.setText("Complete!");
-                downloadButton.setChecked(false);
+                Switch aSwitch = (Switch) findViewById(R.id.download_switch);
+                aSwitch.setChecked(false);
             }
         });
     }
@@ -158,23 +158,18 @@ public class MainActivity extends AppCompatActivity implements RetainedFragment.
 
     public void showViewGraphArguments(View view) {
 
-        AlertDialog.Builder settingsBuilder = new AlertDialog.Builder(this);
-        settingsBuilder.setTitle(R.string.action_settings);
-
-        settingsBuilder.setItems(getResources().getStringArray(R.array.station_strings), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which){
-                    case 0:
-//                        showSortSettings();
-                        break;
-                    case 1:
-//                        showStatusSettings();
-                        break;
-                }
-                dialog.dismiss();
-            }
-        });
-        settingsBuilder.show();
+        Intent i = new Intent(this, VisualizeActivity.class);
+        startActivity(i);
+//        AlertDialog.Builder settingsBuilder = new AlertDialog.Builder(this);
+//        settingsBuilder.setTitle(R.string.action_settings);
+//
+//        settingsBuilder.setItems(getResources().getStringArray(R.array.station_strings), new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                display
+//                dialog.dismiss();
+//            }
+//        });
+//        settingsBuilder.show();
     }
 }

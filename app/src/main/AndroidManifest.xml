@@ -19,6 +19,8 @@
         <activity android:name=".preferences.MyPreferenceActivity"
             android:label="My Preferences">
         </activity>
+        <activity android:name=".logic.VisualizeActivity">
+        </activity>
     </application>
 
 </manifest>

@@ -17,12 +17,12 @@
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         />
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="top"
-        android:weightSum="1">
+        android:gravity="top">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -35,6 +35,10 @@
                 android:layout_height="wrap_content"
                 android:text="@string/download"
                 android:layout_gravity="center|left"/>
+            <TextView
+                android:id="@+id/countdown_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -46,8 +50,6 @@
             android:layout_gravity="right"
             android:onClick="showViewGraphArguments"/>
         </LinearLayout>
-
-
 
         <ProgressBar
             style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Horizontal"
@@ -61,7 +63,6 @@
             android:id="@+id/graphView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:background="@color/colorPrimaryDark"/>
 
         <fragment android:name="com.example.jim.weatherdata.logic.RetainedFragment"

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner"
+        android:layout_gravity="center_horizontal"
+        android:entries="@array/station_strings"/>
+
+    <!--<Button-->
+        <!--android:text="Timestamp for earliest data"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:onClick="showDialog"/>-->
+
+    <!--<Button-->
+        <!--android:text="Timestamp for latest data"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content" />-->
+
+    <Button
+        android:id="@+id/fill_graph"
+        android:text="Show graph"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="drawGraph"/>
+    <com.example.jim.weatherdata.logic.GraphView
+        android:id="@+id/graphView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>
