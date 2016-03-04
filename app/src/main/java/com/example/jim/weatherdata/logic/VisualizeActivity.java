@@ -48,7 +48,6 @@ public class VisualizeActivity extends AppCompatActivity implements DatePickerDi
         });
     }
 
-
     public void showDateDialog(View view) {
         if(view.getId() == R.id.start_date_button){
             dateToBeSet = (TextView) findViewById(R.id.start_date_textView);
@@ -86,6 +85,7 @@ public class VisualizeActivity extends AppCompatActivity implements DatePickerDi
         ArrayList<WeatherData> weatherDatas = source.getDataFromDbWhereStationId(station_id);
         GraphView graphView = ((GraphView) findViewById(R.id.graphView));
         graphView.setWeatherDatas(filterOutDatasOutsideDate(weatherDatas));
+        graphView.setGraphType(((Spinner)findViewById(R.id.spinner_datatype)).getSelectedItemPosition());
         graphView.invalidate();
     }
 
@@ -111,8 +111,5 @@ public class VisualizeActivity extends AppCompatActivity implements DatePickerDi
             e.printStackTrace();
         }
         return returnData;
-
     }
-
-
 }

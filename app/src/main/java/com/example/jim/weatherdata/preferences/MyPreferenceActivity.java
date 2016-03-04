@@ -4,14 +4,12 @@ import android.os.Bundle;
 import android.preference.PreferenceActivity;
 
 import com.example.jim.weatherdata.R;
-import com.example.jim.weatherdata.preferences.MyPreferenceFragment;
 
 import java.util.List;
 
 /**
  * Created by Jim on 01/03/2016.
  */
-@SuppressWarnings("deprecation")
 public class MyPreferenceActivity extends PreferenceActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +21,7 @@ public class MyPreferenceActivity extends PreferenceActivity {
         loadHeadersFromResource(R.xml.mypreferenceheader, target);
     }
 
-    @Override //Fra og med API 19.
+    @Override
     protected boolean isValidFragment(String fragmentName) {
         return (MyPreferenceFragment.class.getName().equals(fragmentName));
     }

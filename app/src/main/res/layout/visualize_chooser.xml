@@ -3,12 +3,6 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/spinner"
-        android:layout_gravity="center_horizontal"
-        android:entries="@array/station_strings"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -92,13 +86,39 @@
             android:paddingRight="20dp"/>
 
     </LinearLayout>
-
-    <Button
-        android:id="@+id/fill_graph"
-        android:text="Show graph"
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="drawGraph"/>
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/fill_graph"
+            android:text="Show graph"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="drawGraph"
+            android:layout_weight="1"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1">
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:id="@+id/spinner"
+                android:layout_gravity="center_horizontal"
+                android:entries="@array/station_strings"/>
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:id="@+id/spinner_datatype"
+                android:layout_gravity="center_horizontal"
+                android:entries="@array/data_types"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
     <com.example.jim.weatherdata.logic.GraphView
         android:id="@+id/graphView"
         android:layout_width="match_parent"

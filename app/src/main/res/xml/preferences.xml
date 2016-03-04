@@ -24,12 +24,7 @@
             android:entryValues="@array/stations"
             android:defaultValue="0"
             />
-        <CheckBoxPreference
-            android:key="PREF_KEEP_OLD"
-            android:title="@string/keep_oldstation"
-            android:summary="@string/keep_oldstation_summ"
-            android:defaultValue="false"
-            />
+
         <EditTextPreference
             android:inputType="number"
             android:key="PREF_DATA_POINTS"

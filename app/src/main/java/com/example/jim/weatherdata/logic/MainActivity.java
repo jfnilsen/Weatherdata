@@ -30,7 +30,6 @@ public class MainActivity extends AppCompatActivity implements RetainedFragment.
     double totalSeconds = 120;
     int intervalSec = 1;
     int datapoints_number = 100;
-    boolean keep_old_station = false;
     boolean downloadRunning = false;
 
     @Override
@@ -44,10 +43,15 @@ public class MainActivity extends AppCompatActivity implements RetainedFragment.
 
         intervalSec = Integer.parseInt(preferences.getString("PREF_INTERVAL", "1"));
         totalSeconds = Double.parseDouble(preferences.getString("PREF_SECONDS", "120"));
-        keep_old_station = preferences.getBoolean("PREF_KEEP_OLD", false);
         datapoints_number = Integer.parseInt(preferences.getString("PREF_DATA_POINTS", "100"));
 
         setListeners();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
     }
 
     @Override
@@ -67,11 +71,6 @@ public class MainActivity extends AppCompatActivity implements RetainedFragment.
 
         }
     }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
 
     public void setListeners() {
         Switch downloadSwitch = (Switch)findViewById(R.id.download_switch);
@@ -85,7 +84,6 @@ public class MainActivity extends AppCompatActivity implements RetainedFragment.
 
     public void download() {
         if(((Switch)findViewById(R.id.download_switch)).isChecked()){
-
             RetainedFragment fragment = (RetainedFragment)getFragmentManager().findFragmentById(R.id.retained_fragment);
             if(!fragment.isRunning())
                 fragment.getWeatherFromJson((int) totalSeconds, intervalSec);
@@ -93,15 +91,12 @@ public class MainActivity extends AppCompatActivity implements RetainedFragment.
             ((RetainedFragment) getFragmentManager().findFragmentById(R.id.retained_fragment)).stopThread();
         }
     }
-    public void localDBFetch(String stationValue) {
 
+    public void localDBFetch(String stationValue) {
         WeatherDataSource source = new WeatherDataSource(this);
         ArrayList<WeatherData> weatherDatas;
-        if(keep_old_station){
-            weatherDatas = source.getAllDataFromDb();
-        }else {
-            weatherDatas = source.getDataFromDbWhereStationId(Integer.parseInt(stationValue));
-        }
+        weatherDatas = source.getDataFromDbWhereStationId(Integer.parseInt(stationValue));
+
         if(weatherDatas.size() > datapoints_number){
             weatherDatas = new ArrayList<>(weatherDatas.subList(weatherDatas.size()-datapoints_number-1 ,weatherDatas.size()-1));
         }
@@ -133,7 +128,6 @@ public class MainActivity extends AppCompatActivity implements RetainedFragment.
             public void run() {
                 downloadRunning = true;
                 getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
             }
         });
     }
@@ -161,7 +155,6 @@ public class MainActivity extends AppCompatActivity implements RetainedFragment.
 
         totalSeconds = Double.parseDouble(myprefs.getString("PREF_SECONDS", "120"));
         intervalSec = Integer.parseInt(myprefs.getString("PREF_INTERVAL", "1"));
-        keep_old_station = myprefs.getBoolean("PREF_KEEP_OLD", false);
         datapoints_number = Integer.parseInt(myprefs.getString("PREF_DATA_POINTS", "100"));
     }
 
@@ -170,8 +163,7 @@ public class MainActivity extends AppCompatActivity implements RetainedFragment.
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString("PREF_INTERVAL", String.valueOf(intervalSec));
         editor.putString("PREF_SECONDS", String.valueOf(totalSeconds));
-        editor.putBoolean("PREF_KEEP_OLD", false);
-        editor.putString("PREF_DATA_POINTS", "100");
+        editor.putString("PREF_DATA_POINTS", String.valueOf(datapoints_number));
         editor.commit();
         super.onStop();
     }

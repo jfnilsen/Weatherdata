@@ -15,7 +15,6 @@ import java.util.ArrayList;
  * Created by Jim on 02/03/2016.
  */
 public class GraphView extends View {
-    Canvas canvas;
     int h;
     int w;
     String station_cur = "";
@@ -23,6 +22,11 @@ public class GraphView extends View {
     String humidity = "";
     String temperature_cur = "";
     ArrayList<WeatherData> weatherDatas = new ArrayList<>();
+    public static final int TEMPERATURE = 0;
+    public static final int HUMIDITY = 1;
+    public static final int PRESSURE = 2;
+
+    private int type = 0;
 
     public GraphView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -31,7 +35,21 @@ public class GraphView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        this.canvas = canvas;
+        switch (type){
+            case TEMPERATURE:
+                drawTemperatureGraph(canvas);
+                break;
+            case HUMIDITY:
+                drawHumidityGraph(canvas);
+                break;
+            case PRESSURE:
+                drawPressureGraph(canvas);
+                break;
+        }
+
+    }
+
+    private void drawTemperatureGraph(Canvas canvas) {
         w = getWidth();
         h = getHeight();
         float x_axis = (float)(h / 1.5);
@@ -90,8 +108,16 @@ public class GraphView extends View {
         }
 
     }
+    private void drawHumidityGraph(Canvas canvas) {
+    }
+
+    private void drawPressureGraph(Canvas canvas) {
+    }
 
     public void setWeatherDatas(ArrayList<WeatherData> weatherDatas){
         this.weatherDatas = weatherDatas;
+    }
+    public void setGraphType(int type) {
+        this.type = type;
     }
 }
