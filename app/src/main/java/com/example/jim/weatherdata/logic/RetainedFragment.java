@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 
 import com.example.jim.weatherdata.R;
@@ -45,7 +44,7 @@ public class RetainedFragment extends Fragment implements SharedPreferences.OnSh
     }
 
     public interface DownloadTimeHelper {
-        void onDownloadTimeDecrease(int remainingTime, String stationValue);
+        void onDownloadTimeDecrease(int remainingTime);
         void downloadStarted();
         void downloadCompleted();
     }
@@ -64,11 +63,12 @@ public class RetainedFragment extends Fragment implements SharedPreferences.OnSh
                 PreferenceManager.getDefaultSharedPreferences(getActivity());
         preferences.registerOnSharedPreferenceChangeListener(this);
         stationValue = preferences.getString("PREF_STATION", "0");
-        //Aktiver cookies:
+
         CookieManager cookieManager = new CookieManager();
         CookieHandler.setDefault(cookieManager);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onAttach(Activity context) {
         super.onAttach(context);
@@ -90,7 +90,7 @@ public class RetainedFragment extends Fragment implements SharedPreferences.OnSh
                 while (secondsRemaining >= 0 && running){
                     try {
                         Thread.sleep(1000);
-                        mCallback.onDownloadTimeDecrease(maxRunningTime - secondsRemaining--,stationValue);
+                        mCallback.onDownloadTimeDecrease(maxRunningTime - secondsRemaining--);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -145,6 +145,7 @@ public class RetainedFragment extends Fragment implements SharedPreferences.OnSh
         countdownThread.start();
         thread.start();
     }
+
     public void stopThread(){
         running = false;
     }
@@ -152,4 +153,17 @@ public class RetainedFragment extends Fragment implements SharedPreferences.OnSh
         return running;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("RUNNING", running);
+    }
+
+    @Override
+    public void onViewStateRestored(Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if(savedInstanceState != null){
+            running =  savedInstanceState.getBoolean("RUNNING", false);
+        }
+    }
 }

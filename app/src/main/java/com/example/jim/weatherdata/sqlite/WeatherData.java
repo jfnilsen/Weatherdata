@@ -1,5 +1,8 @@
 package com.example.jim.weatherdata.sqlite;
 
+import java.util.Comparator;
+import java.util.Objects;
+
 /**
  * Created by jim on 02.03.16.
  */
@@ -8,7 +11,7 @@ public class WeatherData {
     public String station_name;
     public String station_position;
     public String timestamp;
-    public double temperature;
+    public final double temperature;
     public double pressure;
     public double humidity;
 
@@ -20,5 +23,26 @@ public class WeatherData {
         this.temperature = temperature;
         this.pressure = pressure;
         this.humidity = humidity;
+    }
+
+    public enum Order implements Comparator {
+        ByTemperature(){
+            @Override
+            public int compare(Object lhs, Object rhs) {
+                return Double.compare(((WeatherData)lhs).temperature,((WeatherData)rhs).temperature);
+            }
+        },
+        ByHumidity(){
+            @Override
+            public int compare(Object lhs, Object rhs) {
+                return Double.compare(((WeatherData)lhs).humidity, ((WeatherData)rhs).humidity);
+            }
+        },
+        ByPressure(){
+            @Override
+            public int compare(Object lhs, Object rhs) {
+                return Double.compare(((WeatherData)lhs).pressure, ((WeatherData)rhs).pressure);
+            }
+        }
     }
 }

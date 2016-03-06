@@ -3,9 +3,9 @@ package com.example.jim.weatherdata.logic;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements RetainedFragment.
     double totalSeconds = 120;
     int intervalSec = 1;
     int datapoints_number = 100;
-    boolean downloadRunning = false;
+    String station_value = "0";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,11 +40,12 @@ public class MainActivity extends AppCompatActivity implements RetainedFragment.
         SharedPreferences preferences =
                 PreferenceManager.getDefaultSharedPreferences(this);
         preferences.registerOnSharedPreferenceChangeListener(this);
-
+        station_value = preferences.getString("PREF_STATION", "0");
         intervalSec = Integer.parseInt(preferences.getString("PREF_INTERVAL", "1"));
         totalSeconds = Double.parseDouble(preferences.getString("PREF_SECONDS", "120"));
         datapoints_number = Integer.parseInt(preferences.getString("PREF_DATA_POINTS", "100"));
 
+        localDBFetch(station_value);
         setListeners();
     }
 
@@ -59,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements RetainedFragment.
         switch (item.getItemId()) {
 
             case R.id.action_settings:
-                if(downloadRunning){
+                if(((RetainedFragment)getFragmentManager().findFragmentById(R.id.retained_fragment)).isRunning()){
                     Toast.makeText(MainActivity.this, getString(R.string.options_disabled), Toast.LENGTH_SHORT).show();
                 }else{
                     Intent i = new Intent(this, MyPreferenceActivity.class);
@@ -87,8 +88,8 @@ public class MainActivity extends AppCompatActivity implements RetainedFragment.
             RetainedFragment fragment = (RetainedFragment)getFragmentManager().findFragmentById(R.id.retained_fragment);
             if(!fragment.isRunning())
                 fragment.getWeatherFromJson((int) totalSeconds, intervalSec);
-        }else{
-            ((RetainedFragment) getFragmentManager().findFragmentById(R.id.retained_fragment)).stopThread();
+        } else {
+            ((RetainedFragment)getFragmentManager().findFragmentById(R.id.retained_fragment)).stopThread();
         }
     }
 
@@ -106,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements RetainedFragment.
     }
 
     @Override
-    public void onDownloadTimeDecrease(final int remainingTime, final String stationValue) {
+    public void onDownloadTimeDecrease(final int remainingTime) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -115,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements RetainedFragment.
                 ProgressBar bar = (ProgressBar) findViewById(R.id.progressBar);
                 double progress = (remainingTime / totalSeconds) * 100;
                 bar.setProgress((int) progress);
-                localDBFetch(stationValue);
+                localDBFetch(station_value);
 
             }
         });
@@ -126,7 +127,6 @@ public class MainActivity extends AppCompatActivity implements RetainedFragment.
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                downloadRunning = true;
                 getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             }
         });
@@ -141,7 +141,6 @@ public class MainActivity extends AppCompatActivity implements RetainedFragment.
                 downloadButton.setText("Complete!");
                 Switch aSwitch = (Switch) findViewById(R.id.download_switch);
                 aSwitch.setChecked(false);
-                downloadRunning = false;
                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             }
         });
@@ -156,6 +155,7 @@ public class MainActivity extends AppCompatActivity implements RetainedFragment.
         totalSeconds = Double.parseDouble(myprefs.getString("PREF_SECONDS", "120"));
         intervalSec = Integer.parseInt(myprefs.getString("PREF_INTERVAL", "1"));
         datapoints_number = Integer.parseInt(myprefs.getString("PREF_DATA_POINTS", "100"));
+        station_value = myprefs.getString("PREF_STATION", "0");
     }
 
     private void writeToSharedPreference(){
@@ -164,24 +164,27 @@ public class MainActivity extends AppCompatActivity implements RetainedFragment.
         editor.putString("PREF_INTERVAL", String.valueOf(intervalSec));
         editor.putString("PREF_SECONDS", String.valueOf(totalSeconds));
         editor.putString("PREF_DATA_POINTS", String.valueOf(datapoints_number));
+        editor.putString("PREF_STATION", station_value);
+
         editor.commit();
         super.onStop();
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        downloadCompleted();
-        writeToSharedPreference();
-    }
-
     public void showViewGraphArguments(View view) {
-        if(!downloadRunning){
+        if(!((RetainedFragment)getFragmentManager().findFragmentById(R.id.retained_fragment)).isRunning()){
             Intent i = new Intent(this, VisualizeActivity.class);
             startActivity(i);
         }else {
             Toast.makeText(this, getString(R.string.view_graph_while_downloading),Toast.LENGTH_LONG).show();
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        writeToSharedPreference();
+        ((RetainedFragment)getFragmentManager().findFragmentById(R.id.retained_fragment)).stopThread();
+        downloadCompleted();
 
     }
 }

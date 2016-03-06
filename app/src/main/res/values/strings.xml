@@ -18,7 +18,13 @@
     <string name="number_of_datapoints">Datapoints</string>
     <string name="number_of_datapoints_summ">Select how many datapoints the graph will maximum hold</string>
     <string name="start_time">Start time</string>
-    <string name="stop_time">Stop time</string>
+    <string name="stop_time">End time</string>
     <string name="datapoints_hint">Enter maximum number of datapoints</string>
     <string name="view_graph_while_downloading">You must finish downloading before accessing the view window.</string>
+    <string name="start_date">Start date</string>
+    <string name="end_date">End date</string>
+    <string name="epoch_date">1-1-1970</string>
+    <string name="time_start">00:00:00</string>
+    <string name="show_graph">Show graph</string>
+    <string name="end_hour">23:59:00</string>
 </resources>

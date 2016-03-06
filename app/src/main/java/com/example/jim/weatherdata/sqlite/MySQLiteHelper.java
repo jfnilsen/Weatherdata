@@ -21,11 +21,11 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     public static final String KEY_PRESSURE = "pressure";
     public static final String KEY_HUMIDITY = "humidity";
 
-    private static final String DATABASE_CREATE = "create table if not exists "
-            + WEATHER_TABLE + " (" + KEY_PRIMARY_ID +" integer primary key autoincrement, " + KEY_ID
-            + " integer, " + KEY_STATION_NAME + " text,  " + KEY_STATION_POSITION + " text, "
-            + KEY_TIMESTAMP + " text, " + KEY_TEMPERATURE + " integer, " + KEY_PRESSURE + " integer, "
-            + KEY_HUMIDITY + " integer " + ");";
+    private static final String DATABASE_CREATE = "CREATE TABLE IF NOT EXISTS "
+            + WEATHER_TABLE + " (" + KEY_PRIMARY_ID +" INTEGER PRIMARY KEY AUTOINCREMENT, " + KEY_ID
+            + " INTEGER, " + KEY_STATION_NAME + " TEXT,  " + KEY_STATION_POSITION + " TEXT, "
+            + KEY_TIMESTAMP + " TEXT, " + KEY_TEMPERATURE + " INTEGER, " + KEY_PRESSURE + " INTEGER, "
+            + KEY_HUMIDITY + " INTEGER " + ");";
 
 
     public MySQLiteHelper(Context context) {

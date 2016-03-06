@@ -8,40 +8,32 @@
         android:layout_height="wrap_content">
         <Button
             android:id="@+id/start_date_button"
-            android:text="Start date"
+            android:text="@string/start_date"
             android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:onClick="showDateDialog"/>
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"/>
         <TextView
             android:id="@+id/start_date_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="01-02-1970"/>
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:text="@string/epoch_date"
             android:layout_weight="1"/>
+
         <Button
             android:text="@string/start_time"
             android:id="@+id/start_time_button"
             android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:onClick="showTimeDialog"/>
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"/>
+
         <TextView
             android:id="@+id/start_time_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="00:00:00"
-            android:paddingRight="20dp"/>
-        start_time_textView
+            android:text="@string/time_start"
+            android:paddingRight="20dp"
+            android:layout_weight="1"/>
+
 
     </LinearLayout>
 
@@ -51,48 +43,40 @@
         android:layout_height="wrap_content">
         <Button
             android:id="@+id/stop_date_button"
-            android:text="Stop date"
+            android:text="@string/end_date"
             android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:onClick="showDateDialog"/>
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"/>
+
         <TextView
             android:id="@+id/stop_date_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="01-02-1970"/>
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:text="@string/epoch_date"
             android:layout_weight="1"/>
+
         <Button
             android:text="@string/stop_time"
             android:id="@+id/stop_time_button"
             android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:onClick="showTimeDialog"/>
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"/>
         <TextView
             android:id="@+id/stop_time_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="23:59:00"
-            android:paddingRight="20dp"/>
+            android:text="@string/end_hour"
+            android:paddingRight="20dp"
+            android:layout_weight="1"/>
 
     </LinearLayout>
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="50dp">
         <Button
             android:id="@+id/fill_graph"
-            android:text="Show graph"
+            android:text="@string/show_graph"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="drawGraph"
@@ -104,13 +88,14 @@
             android:layout_weight="1">
             <Spinner
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
+                android:layout_height="match_parent"
                 android:id="@+id/spinner"
                 android:layout_gravity="center_horizontal"
-                android:entries="@array/station_strings"/>
+                android:entries="@array/station_strings"
+                android:layout_weight="1"/>
             <Spinner
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
+                android:layout_height="match_parent"
                 android:id="@+id/spinner_datatype"
                 android:layout_gravity="center_horizontal"
                 android:entries="@array/data_types"

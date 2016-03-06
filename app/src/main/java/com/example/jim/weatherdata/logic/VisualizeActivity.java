@@ -46,6 +46,9 @@ public class VisualizeActivity extends AppCompatActivity implements DatePickerDi
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
+        Calendar cal = new GregorianCalendar();
+        ((TextView) findViewById(R.id.stop_date_textView)).setText( cal.get(Calendar.DAY_OF_MONTH)+ "-"+ (cal.get(Calendar.MONTH)+1)+"-"+ cal.get(Calendar.YEAR));
+
     }
 
     public void showDateDialog(View view) {
@@ -111,5 +114,26 @@ public class VisualizeActivity extends AppCompatActivity implements DatePickerDi
             e.printStackTrace();
         }
         return returnData;
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("STATION_ID", station_id);
+        outState.putString("START_DATE", ((TextView) findViewById(R.id.start_date_textView)).getText().toString());
+        outState.putString("START_TIME", ((TextView) findViewById(R.id.start_time_textView)).getText().toString());
+        outState.putString("END_DATE", ((TextView) findViewById(R.id.stop_date_textView)).getText().toString());
+        outState.putString("END_TIME", ((TextView) findViewById(R.id.stop_time_textView)).getText().toString());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        station_id = savedInstanceState.getInt("STATION_ID",-1);
+        ((TextView) findViewById(R.id.start_date_textView)).setText(savedInstanceState.getString("START_DATE"));
+        ((TextView) findViewById(R.id.start_time_textView)).setText(savedInstanceState.getString("START_TIME"));
+        ((TextView) findViewById(R.id.stop_date_textView)).setText(savedInstanceState.getString("END_DATE"));
+        ((TextView) findViewById(R.id.stop_time_textView)).setText(savedInstanceState.getString("END_TIME"));
+        drawGraph(null);
     }
 }
